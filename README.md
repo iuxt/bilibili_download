@@ -17,7 +17,7 @@
 4. 安装Python包
 
     ```bash
-    pip install -r requests.txt
+    pip install -r requirements.txt
     ```
 
 5. 开始下载
