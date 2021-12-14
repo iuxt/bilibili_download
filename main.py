@@ -3,6 +3,7 @@ import os
 import sys
 import dotenv
 import shutil
+import subprocess
 
 dotenv.load_dotenv()
 
@@ -18,16 +19,19 @@ def download(vlist):
     if os.getenv("download_pic") == "yes":
         print(vlist['pic'])
 
-        filename = "images/" + vlist['title'] + "." + vlist['pic'].split(".")[-1]
+        image_file = "download/images/" + vlist['title'] + "." + vlist['pic'].split(".")[-1]
         r = requests.get(vlist['pic'], stream=True)
         if r.status_code == 200:
             r.raw.decode_content = True
-            with open(filename, 'wb') as f:
+            with open(image_file, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
     
     if os.getenv("download_video") == "yes":
         video_url = "https://www.bilibili.com/video/%s" % vlist['bvid']
+        video_file = "download/videos/" + vlist['title'] + ".flv"
         print(video_url)
+        print(video_file)
+        subprocess.run(["./youtube-dl.exe", video_url, "-o", video_file])
 
 
 if __name__ == "__main__":
