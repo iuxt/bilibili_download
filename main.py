@@ -2,6 +2,7 @@ import requests
 import os
 import sys
 import dotenv
+import shutil
 
 dotenv.load_dotenv()
 
@@ -12,11 +13,21 @@ def get_vlist(user_id, num_per_page, page=1):
     return content['data']['list']['vlist']
 
 def download(vlist):
-    video_url = "https://www.bilibili.com/video/%s" % vlist['bvid']
     print(vlist['title'])
-    print(video_url)
+
     if os.getenv("download_pic") == "yes":
         print(vlist['pic'])
+
+        filename = "images/" + vlist['title'] + "." + vlist['pic'].split(".")[-1]
+        r = requests.get(vlist['pic'], stream=True)
+        if r.status_code == 200:
+            r.raw.decode_content = True
+            with open(filename, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+    
+    if os.getenv("download_video") == "yes":
+        video_url = "https://www.bilibili.com/video/%s" % vlist['bvid']
+        print(video_url)
 
 
 if __name__ == "__main__":
