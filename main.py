@@ -3,7 +3,7 @@ import os
 import sys
 import dotenv
 import shutil
-import subprocess
+import youtube_dl
 
 dotenv.load_dotenv()
 
@@ -31,7 +31,16 @@ def download(vlist):
         video_file = "download/videos/" + vlist['title'] + ".flv"
         print(video_url)
         print(video_file)
-        subprocess.run(["./youtube-dl.exe", video_url, "-o", video_file])
+
+        ydl_opts = {
+            'outtmpl': video_file,
+            'ignoreerrors': True,
+            'continue_dl': True,
+        }
+
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+
 
 
 if __name__ == "__main__":
