@@ -40,6 +40,10 @@ def download(vlist):
             'retries': 10,
         }
 
+        if os.getenv("aria2c_enabled") == 'yes':
+            ydl_opts["external_downloader"] = "aria2c"
+            ydl_opts["external_downloader_args"] = ["-x", "16", "-k", "1M"]
+
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([video_url])
 
