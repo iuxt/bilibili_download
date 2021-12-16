@@ -25,17 +25,19 @@ def download(vlist):
             r.raw.decode_content = True
             with open(image_file, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
+        else:
+            print("ERROR download pic")
     
     if os.getenv("download_video") == "yes":
         video_url = "https://www.bilibili.com/video/%s" % vlist['bvid']
         video_file = "download/videos/" + vlist['title'] + ".flv"
         print(video_url)
-        print(video_file)
 
         ydl_opts = {
             'outtmpl': video_file,
             'ignoreerrors': True,
             'continue_dl': True,
+            'retries': 10,
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -51,7 +53,6 @@ if __name__ == "__main__":
 
     while True:
         vlist = get_vlist(user_id, num_per_page, page)
-
         if not vlist:
             sys.exit(0)
 
